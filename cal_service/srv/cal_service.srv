@@ -1,0 +1,7 @@
+std_msgs/String request
+int16 requestNO1
+int16 requestNO2
+
+---
+
+int16 responseNO
