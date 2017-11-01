@@ -10,7 +10,6 @@ from geometry_msgs.msg import Twist
 # print('angular')
 # print(angular)
 class autorun:
-
     def up(msg):
         pub = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
         msg=Twist()
@@ -62,9 +61,9 @@ class autorun:
 
 if __name__ == '__main__':
     rospy.init_node('autorun',anonymous=True)
-    autorun()).forward()
+    # autorun().forward()
     # autorun().back()
-    # autorun().up()
+    autorun().up()
     # autorun().down()
     # autorun().right()
     # autorun().left()
