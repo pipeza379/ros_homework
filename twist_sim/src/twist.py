@@ -9,61 +9,37 @@ from geometry_msgs.msg import Twist
 # print(linear)
 # print('angular')
 # print(angular)
-class autorun:
-    def up(msg):
+class autorun:    
+    global linears
+
+    def run(msg,move):
         pub = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
         msg=Twist()
-        for i in range(100):
-            msg.linear.z+=1
+        for _ in range(100):
+            msg=linears(move)
             rospy.loginfo("Linear Components: [%f, %f, %f]"%(msg.linear.x, msg.linear.y, msg.linear.z))
             pub.publish(msg)
+        rospy.sleep(5)
 
-    def down(msg):
-        pub = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
+    def linears(move):
         msg=Twist()
-        for i in range(100):
-            msg.linear.z-=1
-            rospy.loginfo("Linear Components: [%f, %f, %f]"%(msg.linear.x, msg.linear.y, msg.linear.z))
-            pub.publish(msg)
-
-    def left(msg):
-        pub = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
-        msg=Twist()
-        for i in range(100):
-            msg.linear.y+=1
-            rospy.loginfo("Linear Components: [%f, %f, %f]"%(msg.linear.x, msg.linear.y, msg.linear.z))
-            pub.publish(msg)
-
-    def right(msg):
-        pub = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
-        msg=Twist()
-        for i in range(100):
-            msg.linear.y-=1
-            rospy.loginfo("Linear Components: [%f, %f, %f]"%(msg.linear.x, msg.linear.y, msg.linear.z))
-            pub.publish(msg)
-
-    def forward(msg):
-        pub = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
-        msg=Twist()
-        for i in range(100):
-            msg.linear.x+=1
-            rospy.loginfo("Linear Components: [%f, %f, %f]"%(msg.linear.x, msg.linear.y, msg.linear.z))
-            pub.publish(msg)
-
-    def back(msg):
-        from geometry_msgs.msg import Twist
-        pub = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
-        msg=Twist()
-        for i in range(100):
+        if move=='back':
             msg.linear.x-=1
-            rospy.loginfo("Linear Components: [%f, %f, %f]"%(msg.linear.x, msg.linear.y, msg.linear.z))
-            pub.publish(msg)
+        elif move=='forward':
+            msg.linear.x+=1
+        elif move=='up':
+            msg.linear.z+=1
+        elif move=='down':
+            msg.linear.z-=1
+        elif move=='right':
+            msg.linear.y-=1
+        elif move=='left':
+            msg.linear.y+=1
+        return msg
 
 if __name__ == '__main__':
     rospy.init_node('autorun',anonymous=True)
-    # autorun().forward()
-    # autorun().back()
-    autorun().up()
-    # autorun().down()
-    # autorun().right()
-    # autorun().left()
+    autorun().run('left')
+    #up,down,forward,back,left,right
+    Twist().linear.x=0;Twist().linear.y=0;Twist().linear.z=0
+    rospy.Publisher('/cmd_vel',Twist,queue_size=10).publish(Twist())
