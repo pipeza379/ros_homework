@@ -5,6 +5,7 @@ from geometry_msgs.msg import Twist, Pose
 from nav_msgs.msg import Odometry
 
 class Zeabuscontrol:
+
     def __init__(self):
         rospy.init_node('autorun',anonymous=True)
         self.drive = Twist()
@@ -12,8 +13,8 @@ class Zeabuscontrol:
         self.pub_vel = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
         self.pub_yaw = rospy.Publisher('/fix/rel/yaw',Float64,queue_size=10)
         self.pub_abs_yaw = rospy.Publisher('/fix/abs/yaw',Float64,queue_size=10)
-        self.pub_abs_depth = rospy.Publisher('/fix/abs/depth',Float64,queue_size=10)
-        self.auv_state = [0,0,0,0,0,0]
+        self.pub_abs_depth = rospy.Publisher('/fix/abs/depth',Float64,queue_size=10) 
+        self.auv_state = [0,0,0,0,0,0] #tell position
         rospy.Subscriber('/auv/state',Odometry,self.getState)
 
     def getState(self,data):
@@ -24,7 +25,6 @@ class Zeabuscontrol:
         self.auv_state[0] = pose.position.x
         self.auv_state[1] = pose.position.y
         self.auv_state[2] = pose.position.z
-
         self.auv_state[3] = euler_angular[0]
         self.auv_state[4] = euler_angular[1]
         self.auv_state[5] = euler_angular[2]
@@ -51,7 +51,6 @@ class Zeabuscontrol:
     #         self.drive.linear.y-=1
     #     self.pub_vel.publish(self.drive)
 
-
     def run(self,position):
         here = (self.auv_state[0],self.auv_state[1],self.auv_state[2])
         for j in range(len(position)):
@@ -69,7 +68,7 @@ class Zeabuscontrol:
             
     def linears(self,position,pose,error):
         while self.auv_state[pose] < position-error:
-            # print self.auv_state
+            print self.auv_state
             if pose == 0:
                 self.drive.linear.x+=1
             elif pose == 1:                    
@@ -78,7 +77,7 @@ class Zeabuscontrol:
                 self.drive.linear.z+=1
             self.pub_vel.publish(self.drive)
         while self.auv_state[pose] > position+error:
-            # print self.auv_state
+            print self.auv_state
             if pose == 0:
                 self.drive.linear.x-=1
             elif pose == 1:
@@ -87,13 +86,13 @@ class Zeabuscontrol:
                 self.drive.linear.z-=1
             self.pub_vel.publish(self.drive)
         print self.auv_state
+    
     def stop(self):
         self.drive.linear.x=0 
         self.drive.linear.y=0 
         self.drive.linear.z=0
         self.pub_vel.publish(self.drive)
-        rospy.sleep(0.5)
-        
+        rospy.sleep(0.5)    
 
     def turn_yaw(self,rad):
         self.stop()

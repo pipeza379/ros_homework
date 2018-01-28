@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   rospy
   std_msgs
+  ros_homework
 )
 
 ## System dependencies are found with CMake's conventions
@@ -56,7 +57,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate services in the 'srv' folder
  add_service_files(
    FILES
-   cal_service.srv
+   #cal_service.srv
    cal2_service.srv
  )
 
@@ -70,9 +71,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
-   std_msgs
-   cal_service
-   ros_homework 
+   ros_homework
+   #std_msgs 
 )
 
 ################################################

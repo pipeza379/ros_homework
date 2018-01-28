@@ -1,0 +1,3 @@
+<launch>
+	<node pkg='test_service' name='$(arg nodename)' type='$(arg filename).py' output='screen'/>	
+</launch>
